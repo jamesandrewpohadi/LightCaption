@@ -8,4 +8,4 @@ def check_params(model_path):
     print('Num params:',num_params)
     return num_params
 
-check_params('models/decoder.efficientnetb0-glove.200d-hidden512-connected_cell-5-3000.pth')
+check_params('models/encoder.efficientnetb1-hidden256-connected_cell_hidden-vocab10-scale_down3-5-4000.pth')

@@ -143,9 +143,6 @@ class DecoderScaleDown(nn.Module):
         sampled_ids = torch.stack(sampled_ids, 1)                # sampled_ids: (batch_size, max_seq_length)
         return sampled_ids
     
-    def sample_beamSearch(self,features,states=None):
-        pass
-    
     def sample(self, features, states=None,method='greedy'):
         if method=='greedy':
             return self.sample_greedy(features,states)

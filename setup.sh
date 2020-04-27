@@ -19,10 +19,8 @@ resize="data/resized2014"
 if [ -d "$resize" ]; then
   echo "${resize} exists"
 else
-    echo "resized images to ${resize}"
-  cd ../
-  python3 scratch/resize.py
-  cd scratch
+  echo "resized images to ${resize}"
+  python3 resize.py
 fi
 
 vocab="data/vocab.pkl"
@@ -30,8 +28,8 @@ if [ -f "$vocab" ]; then
   echo "${vocab} exists"
 else
   echo "building vocab..."
-  cd ../
-  python scratch/build_vocab.py 
-  cd scratch
+  python build_vocab.py 
   echo "saved vocab to ${vocab}"
 fi
+
+python3 -m pip install --upgrade efficientnet-pytorch
