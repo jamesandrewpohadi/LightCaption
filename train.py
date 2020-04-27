@@ -188,9 +188,9 @@ def val(encoder,decoder,device,coco,vocab,args):
             encoderTimer.toc()
             cell_state = feature.unsqueeze(1)
             hidden_state = feature.unsqueeze(1)
-            start = torch.tensor(vocab('<start>')).to(device)
             # hidden_state = torch.zeros(cell_state.shape).to(device)
             decoderTimer.tic()
+            start = torch.tensor(vocab('<start>')).to(device)
             inputs = decoder.embed(start).unsqueeze(0)
             sampled_ids = decoder.sample(inputs,(hidden_state,cell_state))
             decoderTimer.toc()
@@ -243,7 +243,7 @@ def main(args):
 
     # Build data loader
     train_data_loader = get_loader(args.image, args.train_caption, vocab, 
-                        train_transform, args.batch_size,start=True,
+                        train_transform, args.batch_size,start=False,
                         shuffle=True, num_workers=args.num_workers,
                         collate_fn=collate_fn)
 
@@ -252,6 +252,15 @@ def main(args):
 
     encoder = Encoder(efficientnetBackbone,efficientnetBackbone.output_size,args.hidden).to(device)
     decoder = DecoderScaleDown(args.embed, args.hidden, len(vocab), args.layer).to(device)
+
+    for param in encoder.parameters():
+        param.require_grads = False
+    
+    for param in encoder.linear.parameters():
+        param.require_grads = True
+
+    for param in encoder.bn.parameters():
+        param.require_grads = True
 
     encoder.train()
     decoder.train()
@@ -330,7 +339,7 @@ if __name__ == "__main__":
     parser.add_argument('-i','--image',default='data/resized2014')
     parser.add_argument('-tc','--train_caption',default='../datasets/coco2014/trainval_coco2014_captions/captions_train2014.json')
     parser.add_argument('-vc','--val_caption',default='../datasets/coco2014/trainval_coco2014_captions/captions_val2014.json')
-    parser.add_argument('-name','--name',default="efficientnetb1-hidden256-connected_cell_hidden-vocab10-scale_down3-pred_start")
+    parser.add_argument('-name','--name',default="efficientnetb1-hidden256-connected_cell_hidden-vocab10-scale_down3")
     parser.add_argument('-mp','--model_path',default="./models")
     parser.add_argument('-t','--target_size',default=224,type=int)
     args = parser.parse_args()
