@@ -22,12 +22,6 @@ from tqdm import tqdm
 import random
 from utils import Timer
 import argparse
-
-from telegram import Bot
-
-bot = Bot('739462815:AAELJ6hhjzj3zv-3c_dkGkCyUS9vB3G5t90')
-    
-# class Attention
     
 class CocoDataset(data.Dataset):
     """COCO Custom Dataset compatible with torch.utils.data.DataLoader."""
@@ -216,8 +210,6 @@ def val(encoder,decoder,device,coco,vocab,args):
 
 def main(args):
 
-    bot.sendMessage(-428968689,'Training {}'.format(args.name))
-
     # Create model directory
     if not os.path.exists(args.model_path):
         os.makedirs(args.model_path)
@@ -289,13 +281,10 @@ def main(args):
             if i % args.log_step == 0:
                 print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Perplexity: {:5.4f}'
                     .format(epoch, args.num_epochs, i, total_step, loss.item(), np.exp(loss.item()))) 
-                bot.sendMessage(-428968689,'Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Perplexity: {:5.4f}'
-                    .format(epoch, args.num_epochs, i, total_step, loss.item(), np.exp(loss.item()))) 
-
+                
             if (i+1) % args.visualise_step == 0:
                 visualise_one(val_coco, encoder, decoder, vocab, device)
                 img = open('sample.png','rb')
-                bot.sendPhoto(-428968689,img)
             
             # Save the model checkpoints
             if (i+1) % args.save_step == 0:

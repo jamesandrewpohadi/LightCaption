@@ -22,12 +22,6 @@ from tqdm import tqdm
 import random
 from utils import Timer
 import argparse
-
-from telegram import Bot
-
-bot = Bot('1046825945:AAF0dseXhi-ytJHNXTUAh7tbKzTakUL2BXM')
-    
-# class Attention
     
 class CocoDataset(data.Dataset):
     """COCO Custom Dataset compatible with torch.utils.data.DataLoader."""
